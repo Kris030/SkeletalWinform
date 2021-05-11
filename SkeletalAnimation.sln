@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31005.135
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SkeletalAnimation", "SkeletalAnimation.csproj", "{D43E1A1B-28BB-4689-A4EC-1EF8E74D588D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D43E1A1B-28BB-4689-A4EC-1EF8E74D588D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D43E1A1B-28BB-4689-A4EC-1EF8E74D588D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D43E1A1B-28BB-4689-A4EC-1EF8E74D588D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D43E1A1B-28BB-4689-A4EC-1EF8E74D588D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {7DA3B0D2-A0D6-4D0E-8357-872529791176}
+	EndGlobalSection
+EndGlobal
