@@ -27,20 +27,20 @@ namespace SkeletalAnimation {
 		}
 		public static void WriteToStream(this Image img, BinaryWriter bw) => WriteToStream(img, bw, ImageFormat.Png);
 
+		// worst peace of shit I've ever written
 		public static Image ReadFromStream(BinaryReader br) {
-			
-			int l = br.ReadInt32();
-			byte[] b = new byte[l];
-			br.Read(b, 0, l);
 
-			string path = /*Path.Combine(Path.GetTempPath(), */"temp/" + Path.GetRandomFileName();
-			using (FileStream fs = File.Create(path)) {
-				fs.Write(b, 0, l);
-			}
+			string path = Path.Combine(Path.GetTempPath(), "skeLoading_" + Path.GetRandomFileName());
 
-			Image img = Image.FromFile(path);
+			File.WriteAllBytes(path, br.ReadBytes(br.ReadInt32()));
 
-			return img;
+			Bitmap bmp;
+			using (Image img = Image.FromFile(path))
+				bmp = new Bitmap(img);
+
+			File.Delete(path);
+
+			return bmp;
 		}
 
 		public static int Clamp(int v, int min, int max) {
