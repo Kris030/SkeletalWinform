@@ -3,27 +3,25 @@ using System.Drawing;
 using System.Windows.Forms;
 
 namespace SkeletalAnimation {
+
 	public partial class Viewer : Form {
 
 		private readonly Skeleton skeleton;
 
 		public bool Running { get; private set; } = true;
 
-		internal static Label debugLabel;
-
 		private readonly Timer timer;
 
 		private Graphics g;
 
-		public Viewer(string file) {
+		public Viewer() {
+
+			string file = GetFile();
 
 			skeleton = Skeleton.LoadFromFile(file);
 
 			InitializeComponent();
 			Text = System.IO.Path.GetFileName(file);
-
-			debugLabel = dLabel;
-			BringToFront();
 
 			timer = new Timer {
 				Interval = 10
@@ -36,16 +34,32 @@ namespace SkeletalAnimation {
 				g.ResetTransform();
 				g.Clear(backg);
 
-				g.TranslateTransform(canvas.Width / 2, canvas.Height / 2);
+				g.TranslateTransform((canvas.Width - controls.Width) / 2, canvas.Height / 2);
 				g.RotateTransform(-90);
 
 				skeleton.Render(g);
 				skeleton.Tick(TimeSpan.FromMilliseconds(10));
 
-				debugLabel.Text = timer.Interval.ToString();
 			};
 			timer.Start();
 
+		}
+
+		private string GetFile() {
+			using (OpenFileDialog ofd = new OpenFileDialog {
+				Title = "Choose file to load",
+				DefaultExt = ".ske",
+				Multiselect = false,
+				Filter = "Skeleton files (*.ske) |*.ske",
+			}) {
+
+				DialogResult res = ofd.ShowDialog(this);
+
+				if (res != DialogResult.OK)
+					Application.Exit();
+
+				return ofd.FileName;
+			}
 		}
 
 		private void OnPausePlayClick(object sender, EventArgs e) {

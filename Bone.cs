@@ -51,25 +51,38 @@ namespace SkeletalAnimation {
 			double t = CurrentAnimation.TimeSinceFrameChange.TotalMilliseconds /
 						CurrentAnimation.CurrentFrame.Duration.TotalMilliseconds;
 
-			double cfr = Utils.Lerp(
+			double rr = Utils.Lerp(
 				CurrentAnimation.CurrentFrame.Rotation,
-				CurrentAnimation.NextFrame.Rotation,
-				t
-			);
+				CurrentAnimation.NextFrame.Rotation, t
+			) + r;
 
 			Matrix original = g.Transform;
+			g.RotateTransform((float) Utils.ToDegrees(rr));
 
-			double cfrr = cfr + r;
-			g.RotateTransform((float) Utils.ToDegrees(cfrr));
-			double w2 = CurrentAnimation.CurrentFrame.Width / 2;
+			double ll = Utils.Lerp(
+				CurrentAnimation.CurrentFrame.Length,
+				CurrentAnimation.NextFrame.Length, t
+			);
 
-			if (Sprite != null)
-				g.DrawImage(Sprite, (float) (SpriteOffsetX - w2), (float) SpriteOffsetY);
+			if (Sprite != null) {
+				double w = Utils.Lerp(
+					CurrentAnimation.CurrentFrame.Width,
+					CurrentAnimation.NextFrame.Width, t
+				);
+				double w2 = w / 2;
 
-			g.TranslateTransform(0, (float) CurrentAnimation.CurrentFrame.Length);
+				g.DrawImage(
+					Sprite,
+					(float) (SpriteOffsetX - w2), (float) SpriteOffsetY,
+					(float) w,
+					(float) ll
+				);
+			}
+
+			g.TranslateTransform(0, (float) ll);
 
 			foreach (Bone b in Children)
-				b.Render(g, cfrr);
+				b.Render(g, rr);
 
 			g.Transform = original;
 		}

@@ -14,8 +14,7 @@ namespace SkeletalAnimation {
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault(false);
 
-			string file = GetFile();
-			Application.Run(new Viewer(file));
+			Application.Run(new Viewer());
 		}
 
 		private static void CreateTestSkeleton() {
@@ -41,7 +40,7 @@ namespace SkeletalAnimation {
 								), new KeyFrame(
 									TimeSpan.FromSeconds(2),
 									Utils.ToRadians(90),
-									100, 20
+									150, 50
 								), new KeyFrame(
 									TimeSpan.FromSeconds(2),
 									Utils.ToRadians(180),
@@ -49,7 +48,7 @@ namespace SkeletalAnimation {
 								), new KeyFrame(
 									TimeSpan.FromSeconds(2),
 									Utils.ToRadians(90),
-									100, 20
+									200, 100
 								)
 
 							}
@@ -103,21 +102,6 @@ namespace SkeletalAnimation {
 			});
 		}
 
-		private static string GetFile() {
-			using (OpenFileDialog ofd = new OpenFileDialog {
-				Title = "Choose file to load",
-				DefaultExt = ".ske",
-				Multiselect = false,
-				Filter = "Skeleton files (*.ske) |*.ske"
-			}) {
-
-				DialogResult res = ofd.ShowDialog();
-
-				if (res != DialogResult.OK)
-					Application.Exit();
-
-				return ofd.FileName;
-			}
-		}
+		
 	}
 }

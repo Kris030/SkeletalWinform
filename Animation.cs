@@ -83,9 +83,6 @@ namespace SkeletalAnimation {
 				NextKeyFrame();
 			}
 
-			if (Viewer.debugLabel != null)
-				Viewer.debugLabel.Text = PreviousFrameIndex + " | " + CurrentFrameIndex + " | " + NextFrameIndex;
-
 		}
 
 		public static Animation ReadFromFile(BinaryReader br) {
