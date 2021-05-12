@@ -17,8 +17,8 @@ namespace SkeletalAnimation {
 				b.SetAnimation(name);
 		}
 
-		public double EndX(double start, double rot) => start + Math.Cos(rot) * CurrentAnimation.CurrentFrame.Length;
-		public double EndY(double start, double rot) => start + Math.Sin(rot) * CurrentAnimation.CurrentFrame.Width / 2;
+		public double EndX(double rot) => Math.Cos(rot) * CurrentAnimation.CurrentFrame.Length;
+		public double EndY(double rot) => Math.Sin(rot) * CurrentAnimation.CurrentFrame.Width / 2;
 
 		public ushort? spriteIndex;
 
@@ -46,20 +46,30 @@ namespace SkeletalAnimation {
 			CurrentAnimation.Tick(t);
 		}
 
-		internal void Render(Graphics g, double x, double y, double r = 0) {
+		internal void Render(Graphics g, double r) {
 
-			double cfr = CurrentAnimation.CurrentFrame.Rotation;
+			double t = CurrentAnimation.TimeSinceFrameChange.TotalMilliseconds /
+						CurrentAnimation.CurrentFrame.Duration.TotalMilliseconds;
+
+			double cfr = Utils.Lerp(
+				CurrentAnimation.CurrentFrame.Rotation,
+				CurrentAnimation.NextFrame.Rotation,
+				t
+			);
 
 			Matrix original = g.Transform;
-			g.RotateTransform((float) cfr);
+
+			double cfrr = cfr + r;
+			g.RotateTransform((float) Utils.ToDegrees(cfrr));
+			double w2 = CurrentAnimation.CurrentFrame.Width / 2;
 
 			if (Sprite != null)
-				g.DrawImage(Sprite, (float) (x + SpriteOffsetX), (float) (y + SpriteOffsetY));
+				g.DrawImage(Sprite, (float) (SpriteOffsetX - w2), (float) SpriteOffsetY);
 
-			double eX = EndX(x, r + cfr),
-				   eY = EndY(y, r + cfr);
+			g.TranslateTransform(0, (float) CurrentAnimation.CurrentFrame.Length);
+
 			foreach (Bone b in Children)
-				b.Render(g, eX, eY, r + cfr);
+				b.Render(g, cfrr);
 
 			g.Transform = original;
 		}

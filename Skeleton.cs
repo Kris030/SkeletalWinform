@@ -2,8 +2,10 @@
 using System.IO;
 using System.Linq;
 using System.Drawing;
+using SkeletalAnimation;
 using System.Drawing.Imaging;
 using System.Collections.Generic;
+using System.Drawing.Drawing2D;
 
 namespace SkeletalAnimation {
 
@@ -70,21 +72,19 @@ namespace SkeletalAnimation {
 		}
 
 		public void Render(Graphics g, double x = 0, double y = 0) {
-			Root.Render(g, x + this.x, y + this.y);
-
-
+			g.TranslateTransform((float) (x + this.x), (float) (y + this.y));
+			Root.Render(g, 0);
 		}
 
 		public static Skeleton LoadFromFile(string file) {
-			FileStream fs = new FileStream(file, FileMode.Open);
-			using (BinaryReader br = new BinaryReader(fs)) {
+			using (BinaryReader br = new BinaryReader(new FileStream(file, FileMode.Open))) {
 
 				double x = br.ReadDouble(), y = br.ReadDouble();
 
 				ushort ssC = br.ReadUInt16();
 				Image[] ss = new Image[ssC];
 				for (ushort u = 0; u < ssC; u++)
-					ss[u] = Image.FromStream(fs);
+					ss[u] = Utils.ReadFromStream(br);
 
 				string initialAnimation = br.ReadString();
 
@@ -99,7 +99,7 @@ namespace SkeletalAnimation {
 
 				bw.Write((ushort) sprites.Length);
 				foreach (Image s in sprites)
-					s.Save(bw.BaseStream, ImageFormat.Jpeg);
+					s.WriteToStream(bw);
 
 				bw.Write(skeleton.CurrentAnimation);
 

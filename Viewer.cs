@@ -7,7 +7,13 @@ namespace SkeletalAnimation {
 
 		private readonly Skeleton skeleton;
 
-		internal static Label label;
+		public bool Running { get; private set; } = true;
+
+		internal static Label debugLabel;
+
+		private readonly Timer timer;
+
+		private Graphics g;
 
 		public Viewer(string file) {
 
@@ -16,23 +22,45 @@ namespace SkeletalAnimation {
 			InitializeComponent();
 			Text = System.IO.Path.GetFileName(file);
 
-			label = label1;
+			debugLabel = dLabel;
 			BringToFront();
 
-			Timer t = new Timer {
+			timer = new Timer {
 				Interval = 10
 			};
-			Graphics g = canvas.CreateGraphics();
-			t.Tick += (object sender, EventArgs eargs) => {
+
+			Color backg = Color.FromArgb(50, 50, 50);
+
+			g = canvas.CreateGraphics();
+			timer.Tick += (object sender, EventArgs eargs) => {
 				g.ResetTransform();
-				//g.FillRectangle(Brushes.Black, 0, 0, canvas.Width, canvas.Height);
+				g.Clear(backg);
+
 				g.TranslateTransform(canvas.Width / 2, canvas.Height / 2);
 				g.RotateTransform(-90);
+
 				skeleton.Render(g);
+				skeleton.Tick(TimeSpan.FromMilliseconds(10));
+
+				debugLabel.Text = timer.Interval.ToString();
 			};
-			t.Start();
+			timer.Start();
 
 		}
+
+		private void OnPausePlayClick(object sender, EventArgs e) {
+			if (Running)
+				timer.Stop();
+			else
+				timer.Start();
+
+			pauseStartButton.Text = (Running = !Running) ? "⏸️" : "▶️";
+		}
+
+		private void OnCanvasResize(object sender, EventArgs e) => g = canvas.CreateGraphics();
+
+		private void SpeedOMeterChanged(object sender, EventArgs e) =>
+			timer.Interval = (int) ((double) speedOMeter.Value / speedOMeter.Maximum * 100 + 1);
 
 	}
 }

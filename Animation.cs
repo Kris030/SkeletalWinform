@@ -11,6 +11,9 @@ namespace SkeletalAnimation {
 		public double Width { get; }
 
 		public KeyFrame(TimeSpan duration, double rotation, double length, double width) {
+			if (duration <= TimeSpan.Zero)
+				throw new ArgumentException("Duration can't be negative or zero.");
+
 			Duration = duration;
 			Rotation = rotation;
 			Length = length;
@@ -33,33 +36,61 @@ namespace SkeletalAnimation {
 
 		public string Name { get; }
 
+		public bool Loop { get; }
+
 		public ushort initialKeyFrame;
 		readonly KeyFrame[] keyFrames;
 
-		public int CurrentFrameIndex { get; set; }
-
+		public KeyFrame CurrentFrame => keyFrames[CurrentFrameIndex];
 		public TimeSpan TimeSinceFrameChange { get; private set; }
 
-		public KeyFrame CurrentFrame => keyFrames[CurrentFrameIndex];
+		public KeyFrame PreviousFrame => keyFrames[PreviousFrameIndex];
+		public KeyFrame NextFrame => keyFrames[NextFrameIndex];
+
+		public int CurrentFrameIndex { get; private set; }
+		public int PreviousFrameIndex { get; private set; }
+		public int NextFrameIndex { get; private set; }
+
+		private void NextKeyFrame() {
+			PreviousFrameIndex = CurrentFrameIndex;
+			CurrentFrameIndex = Utils.AddOneWrap(PreviousFrameIndex, 0, keyFrames.Length);
+			NextFrameIndex = Utils.AddOneWrap(CurrentFrameIndex, 0, keyFrames.Length);
+		}
 
 		public Animation(string name, KeyFrame[] keyFrames) {
 			this.keyFrames = keyFrames;
 			Name = name;
+			Loop = true;
+
+			NextFrameIndex = Utils.AddOneWrap(CurrentFrameIndex, 0, keyFrames.Length);
 		}
 
-		public Animation(string name, KeyFrame[] keyFrames, int currentFrameIndex) {
-			CurrentFrameIndex = currentFrameIndex;
+		public Animation(string name, KeyFrame[] keyFrames, int currentFrameIndex, bool loop) {
 			this.keyFrames = keyFrames;
+			
+			PreviousFrameIndex = CurrentFrameIndex = currentFrameIndex;
+			NextFrameIndex = Utils.AddOneWrap(currentFrameIndex, 0, keyFrames.Length);
+
 			Name = name;
+			Loop = loop;
 		}
 
 		internal void Tick(TimeSpan t) {
-			if ((TimeSinceFrameChange += t) >= CurrentFrame.Duration)
-				CurrentFrameIndex++;
+			TimeSinceFrameChange += t;
+
+			while (TimeSinceFrameChange >= CurrentFrame.Duration) {
+				TimeSinceFrameChange -= CurrentFrame.Duration;
+				NextKeyFrame();
+			}
+
+			if (Viewer.debugLabel != null)
+				Viewer.debugLabel.Text = PreviousFrameIndex + " | " + CurrentFrameIndex + " | " + NextFrameIndex;
+
 		}
 
 		public static Animation ReadFromFile(BinaryReader br) {
 			string name = br.ReadString();
+			bool loop = br.ReadBoolean();
 
 			ushort c = br.ReadUInt16();
 			KeyFrame[] kfs = new KeyFrame[c];
@@ -69,10 +100,13 @@ namespace SkeletalAnimation {
 
 			ushort initial = br.ReadUInt16();
 
-			return new Animation(name, kfs, initial);
+			return new Animation(name, kfs, initial, loop);
 		}
 
 		public static void WriteToFile(BinaryWriter bw, Animation animation) {
+			bw.Write(animation.Name);
+			bw.Write(animation.Loop);
+
 			ushort la = (ushort) animation.keyFrames.Length;
 			bw.Write(la);
 
