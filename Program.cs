@@ -20,7 +20,7 @@ namespace SkeletalAnimation {
 
 		private static void CreateTestSkeleton() {
 
-			Image sprite1 = Image.FromFile("sprite2.png");
+			Image sprite1 = Image.FromFile("res/testSprite.png");
 
 			Skeleton s = new Skeleton(
 
