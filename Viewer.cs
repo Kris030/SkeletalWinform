@@ -10,7 +10,7 @@ namespace SkeletalAnimation {
 
 		public bool Running { get; private set; } = true;
 
-		private readonly Timer timer;
+		private readonly Timer updateTimer, renderTimer;
 
 		public Viewer() {
 
@@ -21,7 +21,7 @@ namespace SkeletalAnimation {
 			InitializeComponent();
 			Text = System.IO.Path.GetFileName(file);
 
-			timer = new Timer {
+			updateTimer = new Timer {
 				Interval = 10
 			};
 
@@ -38,12 +38,14 @@ namespace SkeletalAnimation {
 				skeleton.Render(g);
 			};
 
-			timer.Tick += (object sender, EventArgs eargs) => {
-				skeleton.Tick(TimeSpan.FromMilliseconds(timer.Interval));
-				canvas.Refresh();
-			};
+			updateTimer.Tick += (object sender, EventArgs eargs) => skeleton.Tick(TimeSpan.FromMilliseconds(updateTimer.Interval));
+			updateTimer.Start();
 
-			timer.Start();
+			renderTimer = new Timer {
+				Interval = 16
+			};
+			renderTimer.Tick += (object sender, EventArgs eargs) => canvas.Refresh();
+			renderTimer.Start();
 
 		}
 
@@ -66,15 +68,15 @@ namespace SkeletalAnimation {
 
 		private void OnPausePlayClick(object sender, EventArgs e) {
 			if (Running)
-				timer.Stop();
+				updateTimer.Stop();
 			else
-				timer.Start();
+				updateTimer.Start();
 
 			pauseStartButton.Text = (Running = !Running) ? "⏸️" : "▶️";
 		}
 
 		private void SpeedOMeterChanged(object sender, EventArgs e) =>
-			timer.Interval = (int) ((double) speedOMeter.Value / speedOMeter.Maximum * 100 + 1);
+			updateTimer.Interval = (int) ((double) speedOMeter.Value / speedOMeter.Maximum * 100 + 1);
 
 	}
 }
