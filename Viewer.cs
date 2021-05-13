@@ -12,8 +12,6 @@ namespace SkeletalAnimation {
 
 		private readonly Timer timer;
 
-		private Graphics g;
-
 		public Viewer() {
 
 			string file = GetFile();
@@ -29,17 +27,22 @@ namespace SkeletalAnimation {
 
 			Color backg = Color.FromArgb(50, 50, 50);
 
-			g = canvas.CreateGraphics();
-			timer.Tick += (object sender, EventArgs eargs) => {
+			canvas.Paint += (object sender, PaintEventArgs a) => {
+				Graphics g = a.Graphics;
 				g.ResetTransform();
 				g.Clear(backg);
 
 				g.TranslateTransform((canvas.Width - controls.Width) / 2, canvas.Height / 2);
 				g.RotateTransform(-90);
 
-				skeleton.Tick(TimeSpan.FromMilliseconds(10));
 				skeleton.Render(g);
 			};
+
+			timer.Tick += (object sender, EventArgs eargs) => {
+				skeleton.Tick(TimeSpan.FromMilliseconds(timer.Interval));
+				canvas.Refresh();
+			};
+
 			timer.Start();
 
 		}
@@ -69,8 +72,6 @@ namespace SkeletalAnimation {
 
 			pauseStartButton.Text = (Running = !Running) ? "⏸️" : "▶️";
 		}
-
-		private void OnCanvasResize(object sender, EventArgs e) => g = canvas.CreateGraphics();
 
 		private void SpeedOMeterChanged(object sender, EventArgs e) =>
 			timer.Interval = (int) ((double) speedOMeter.Value / speedOMeter.Maximum * 100 + 1);
