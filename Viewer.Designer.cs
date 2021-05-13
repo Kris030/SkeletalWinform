@@ -47,6 +47,8 @@ namespace SkeletalAnimation {
             // controls
             // 
             this.controls.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.controls.BackColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.controls.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.controls.Controls.Add(this.speedOMeterLabel);
             this.controls.Controls.Add(this.speedOMeter);
             this.controls.Controls.Add(this.pauseStartButton);
