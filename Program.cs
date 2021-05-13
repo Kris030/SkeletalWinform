@@ -58,7 +58,7 @@ namespace SkeletalAnimation {
 
 					new Bone[] {
 
-						// inner bone
+						// inner bone 1
 						new Bone(
 							sprite1,
 							new Animation[] {
@@ -81,6 +81,39 @@ namespace SkeletalAnimation {
 										), new KeyFrame(
 											TimeSpan.FromSeconds(1),
 											Utils.ToRadians(270),
+											100, 20
+										)
+
+									}
+								)
+							}
+						) {
+							spriteIndex = 0
+						},
+
+						// inner bone 2
+						new Bone(
+							sprite1,
+							new Animation[] {
+								new Animation(
+									"anim1",
+									new KeyFrame[] {
+
+										new KeyFrame(
+											TimeSpan.FromSeconds(1),
+											0,
+											100, 20
+										), new KeyFrame(
+											TimeSpan.FromSeconds(1),
+											Utils.ToRadians(-90),
+											100, 20
+										), new KeyFrame(
+											TimeSpan.FromSeconds(1),
+											Utils.ToRadians(-180),
+											100, 20
+										), new KeyFrame(
+											TimeSpan.FromSeconds(1),
+											Utils.ToRadians(-270),
 											100, 20
 										)
 
