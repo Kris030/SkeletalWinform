@@ -52,7 +52,7 @@ namespace SkeletalAnimation {
             this.controls.Controls.Add(this.pauseStartButton);
             this.controls.Location = new System.Drawing.Point(600, 0);
             this.controls.Name = "controls";
-            this.controls.Size = new System.Drawing.Size(200, 450);
+            this.controls.Size = new System.Drawing.Size(200, 178);
             this.controls.TabIndex = 1;
             // 
             // speedOMeterLabel
@@ -79,7 +79,7 @@ namespace SkeletalAnimation {
             // pauseStartButton
             // 
             this.pauseStartButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 32.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.pauseStartButton.Location = new System.Drawing.Point(113, 363);
+            this.pauseStartButton.Location = new System.Drawing.Point(113, 88);
             this.pauseStartButton.Name = "pauseStartButton";
             this.pauseStartButton.Size = new System.Drawing.Size(75, 75);
             this.pauseStartButton.TabIndex = 1;

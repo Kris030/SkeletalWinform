@@ -32,7 +32,7 @@ namespace SkeletalAnimation {
 				g.ResetTransform();
 				g.Clear(backg);
 
-				g.TranslateTransform((canvas.Width - controls.Width) / 2, canvas.Height / 2);
+				g.TranslateTransform(canvas.Width / 2, canvas.Height / 2);
 				g.RotateTransform(-90);
 
 				skeleton.Render(g);
