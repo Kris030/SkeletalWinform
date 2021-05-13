@@ -43,6 +43,11 @@ namespace SkeletalAnimation {
             this.canvas.Size = new System.Drawing.Size(800, 450);
             this.canvas.TabIndex = 0;
             this.canvas.TabStop = false;
+            this.canvas.MouseWheel += OnCanvasWheel;
+            this.canvas.MouseDown += OnCanvasMouseDown;
+			this.canvas.MouseUp += OnCanvasMouseUp;
+			this.canvas.MouseMove += OnCanvasMouseMove;
+
             // 
             // controls
             // 
@@ -76,7 +81,7 @@ namespace SkeletalAnimation {
             this.speedOMeter.Size = new System.Drawing.Size(188, 45);
             this.speedOMeter.TabIndex = 2;
             this.speedOMeter.Value = 1;
-            this.speedOMeter.ValueChanged += new System.EventHandler(this.SpeedOMeterChanged);
+            this.speedOMeter.ValueChanged += new System.EventHandler(this.OnSpeedOMeterChanged);
             // 
             // pauseStartButton
             // 
@@ -106,7 +111,6 @@ namespace SkeletalAnimation {
             this.ResumeLayout(false);
 
 		}
-
 		#endregion
 
 		private System.Windows.Forms.PictureBox canvas;
