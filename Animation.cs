@@ -53,8 +53,8 @@ namespace SkeletalAnimation {
 
 		private void NextKeyFrame() {
 			PreviousFrameIndex = CurrentFrameIndex;
-			CurrentFrameIndex = Utils.AddOneWrap(PreviousFrameIndex, 0, keyFrames.Length);
-			NextFrameIndex = Utils.AddOneWrap(CurrentFrameIndex, 0, keyFrames.Length);
+			CurrentFrameIndex = Utils.AddOneWrap(PreviousFrameIndex, 0, keyFrames.Length, Loop);
+			NextFrameIndex = Utils.AddOneWrap(CurrentFrameIndex, 0, keyFrames.Length, Loop);
 		}
 
 		public Animation(string name, KeyFrame[] keyFrames) {

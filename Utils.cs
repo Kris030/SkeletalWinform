@@ -9,16 +9,6 @@ namespace SkeletalAnimation {
 		public static double ToRadians(double degrees) => Math.PI / 180 * degrees;
 		public static double ToDegrees(double radians) => 180 / Math.PI * radians;
 
-		public static (double, double) RotatePoint(double x, double y, double oX, double oY, double angle) {
-			double sin = Math.Sin(angle), cos = Math.Cos(angle),
-					temp = (x - oX) * cos - (y - oY) * sin + oX;
-
-			y = (x - oX) * sin + (y - oY) * cos + oY;
-			x = temp;
-
-			return (x, y);
-		}
-
 		public static void WriteToStream(this Image img, BinaryWriter bw, ImageFormat format) {
 			MemoryStream ms = new MemoryStream();
 			img.Save(ms, format);
@@ -28,7 +18,7 @@ namespace SkeletalAnimation {
 		public static void WriteToStream(this Image img, BinaryWriter bw) => WriteToStream(img, bw, ImageFormat.Png);
 
 		// worst peace of shit I've ever written
-		public static Image ReadFromStream(BinaryReader br) {
+		public static Bitmap ReadFromStream(BinaryReader br) {
 
 			string path = Path.Combine(Path.GetTempPath(), "skeLoading_" + Path.GetRandomFileName());
 
@@ -69,7 +59,10 @@ namespace SkeletalAnimation {
 		public static double Map(double s1, double e1, double s2, double e2, double v) =>
 			s2 + (e2 - s2) * ((v - s1) / (e1 - s1));
 
-		public static int AddOneWrap(int val, int start, int end) => ++val >= end ? start : val;
+		public static int AddOneWrap(int val, int start, int end, bool wrap = true) =>
+			++val >= end ?
+				(wrap ? start : val - 1) :
+				val;
 
 	}
 
