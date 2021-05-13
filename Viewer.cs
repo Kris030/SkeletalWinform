@@ -37,9 +37,8 @@ namespace SkeletalAnimation {
 				g.TranslateTransform((canvas.Width - controls.Width) / 2, canvas.Height / 2);
 				g.RotateTransform(-90);
 
-				skeleton.Render(g);
 				skeleton.Tick(TimeSpan.FromMilliseconds(10));
-
+				skeleton.Render(g);
 			};
 			timer.Start();
 
